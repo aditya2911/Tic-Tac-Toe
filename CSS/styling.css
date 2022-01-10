@@ -1,0 +1,42 @@
+body{
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.header{
+    padding: 2rem 12rem;
+    width: 100vw;
+    text-align: center;
+    font-size: 5rem;
+}
+
+.main-container{
+    display: flex;
+    justify-content: space-around;
+    width: 100vw;
+    flex-flow: row wrap;
+    padding: 5rem;
+}
+
+.player1 , .player2{
+    border: 1px solid;
+    width: 15.625rem;
+    height: 18.625rem;
+    display: flex;
+    max-width: 21.875rem;
+    flex-flow: row wrap;
+    flex: 1;
+}
+
+.versus{
+    display: flex;
+    align-items: center;
+}
+
+.choice{
+
+}
