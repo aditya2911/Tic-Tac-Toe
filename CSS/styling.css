@@ -1,15 +1,25 @@
-body{
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
+
+@font-face {
+    font-family: decalled;
+    src: url(font-resources/CandyBeans-qnM5.ttf);
 }
 
+
+
+body{
+    display: flex;
+    flex-flow: column nowrap; 
+}
+
+
+*{
+    font-family: decalled;
+}
+
+
 .header{
-    padding: 2rem 12rem;
-    width: 100vw;
+    padding: 2rem ;
+  font-family: decalled;
     text-align: center;
     font-size: 5rem;
 }
@@ -17,26 +27,56 @@ body{
 .main-container{
     display: flex;
     justify-content: space-around;
-    width: 100vw;
-    flex-flow: row wrap;
+    gap: 2rem;
+    flex-flow: row nowrap;
     padding: 5rem;
 }
 
 .player1 , .player2{
     border: 1px solid;
-    width: 15.625rem;
-    height: 18.625rem;
+    min-width: 14.625rem;
+    /* min-height: 25.625rem; */
     display: flex;
     max-width: 21.875rem;
-    flex-flow: row wrap;
+    flex-flow: column nowrap;
     flex: 1;
 }
 
 .versus{
     display: flex;
     align-items: center;
+    font-size: 5rem;
 }
 
-.choice{
+.gif > iframe{
+    width: 20rem;
+    height: 20rem;
+   
+}
 
+.gif{
+    display: flex;
+    flex: 1;
+}
+
+
+.card-content{
+    padding: 1rem;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+.choice{
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    padding: 0.5rem;
+}
+
+.mid-container{
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+    justify-content: center;
+    gap: 2rem;
 }
