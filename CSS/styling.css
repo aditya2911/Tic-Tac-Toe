@@ -4,6 +4,11 @@
     src: url(font-resources/SugarSmile-z8jza.otf);
 }
 
+@font-face {
+    font-family: numericFont;
+    src: url(font-resources/CandyBeans-qnM5.ttf);
+}
+
 @keyframes header-animation {
 0%{
     color: black;
@@ -32,6 +37,42 @@
     
 }
 
+@keyframes fade{
+    50%{
+        transform: scale(1.1);
+    }
+    100%{
+        transform: scale(0);
+    }
+}
+
+@keyframes pop-in {
+    0% {transform: scale(0);} 
+    75% {transform: scaleX(1.2);}
+    100% {transform: scale(1);}
+}
+@keyframes pop-out {
+    0% {transform: scale(1);} 
+    75% {transform: scale(1.2);}
+    100% {transform: scale(0);}
+}
+
+.fade{
+    animation: fade 1s ease forwards;
+}
+
+.pop-out{
+    animation: pop-out 1s ease forwards;
+}
+
+.popin1{
+    animation-name: pop-in;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    
+
+}
+
 
 body{
     display: flex;
@@ -41,6 +82,10 @@ body{
 
 *{
     font-family: decalled;
+}
+
+.numberFont{
+    font-family: numericFont;
 }
 
 
@@ -164,4 +209,65 @@ body{
     margin: 0;
     padding: 0%;
     -webkit-tap-highlight-color: transparent;
+}
+
+.splash{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 5rem;
+    gap: 2rem;
+    height: 100vh;
+}
+
+.cont-container{
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    font-size: 6rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.start-container{
+    display: flex;
+    font-family: numericFont;
+}
+
+.cont1,.cont2,.Vs,.start-timer{
+    transform: scale(0);
+}
+
+
+element.style {
+}
+.play-container {
+    display: flex;
+    flex-flow: column;
+    height: 100vh;
+    background: red;
+}
+
+.return-container{
+    padding: 1.5rem;
+}
+
+.game-container{
+    display: flex;
+    flex-flow: column;
+}
+
+.player-container{
+    padding: 1.5rem;
+}
+
+.cell-container{
+    display: grid;
+    grid-template-rows: repeat(3,1fr);
+    grid-template-columns: repeat(3,1fr);
+}
+
+.cells{
+    width: 2rem;
 }
