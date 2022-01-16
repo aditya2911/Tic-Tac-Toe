@@ -71,7 +71,8 @@ const loadingScreen = (() => {
     window.setTimeout(() => theCountDown('Start Game'), 7000);
     window.setTimeout(() => { splashscreen.classList.add('pop-out') }, 8000);
     window.setTimeout(() => { splashscreen.style.display = 'none' }, 9000);
-    window.setTimeout(() => { playContainer.style.display = 'block' }, 9500);
+    window.setTimeout(() => { playContainer.style.display = 'flex' }, 9500);
+    window.setTimeout(() => { playContainer.classList.add('popin1') }, 9500);
 
 
 

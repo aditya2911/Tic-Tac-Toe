@@ -240,34 +240,101 @@ body{
 }
 
 
-element.style {
-}
+
 .play-container {
     display: flex;
     flex-flow: column;
     height: 100vh;
-    background: red;
 }
 
-.return-container{
-    padding: 1.5rem;
+.return-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 4rem;
+}
+
+.return-button{
+    width: 6rem;
+    height: 2.2rem;
+    border-radius: 3.125rem;
+    box-shadow: 0 0 20px 2px rgb(0 0 0 / 10%);
+    margin-left: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .game-container{
     display: flex;
     flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 4rem;
 }
 
 .player-container{
-    padding: 1.5rem;
+    display: flex;
+    gap: 1.2rem;
+    flex-flow: row wrap;
+    justify-content: center;
+
 }
 
 .cell-container{
+    height: 20rem;
     display: grid;
+    width: 20rem;
+    gap: 1rem;
     grid-template-rows: repeat(3,1fr);
     grid-template-columns: repeat(3,1fr);
 }
 
+.player-one ,.player-two{
+    width: 15rem;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 0 20px 0.5px rgb(0 0 0 / 5%);
+    font-size: 1.2rem;
+    height: 3.5rem;
+    color: rgba(0, 0, 0, 0.657);
+    border-radius: 1.875rem;
+}
+
+.player-one{
+    background-color: rgb(255, 185, 176);
+    box-shadow: 0px 0px 20px 1px rgb(255, 185, 176);
+}
+
 .cells{
-    width: 2rem;
+    FONT-SIZE: 3REM;
+    DISPLAY: FLEX;
+    ALIGN-ITEMS: CENTER;
+    background-color: #f5f5f5;
+    FLEX: 1;
+    color: rgba(0, 0, 0, 0.657);
+    JUSTIFY-CONTENT: CENTER;
+    border-radius: 1.25rem;
+    transition-property: all;
+    transition-duration: 200ms;
+}
+
+.cells:hover{
+    border-radius: 20px;
+    transform: scale(1.05);
+    background-color: rgb(233, 233, 233);
+    box-shadow: 0 0 10px 2px rgb(0 0 0 / 10%);
+}
+
+.round-container{
+    width: 12rem;
+    height: 3rem;
+    border-radius: 1.875rem;
+    display: flex;
+    align-items: center;
+    color: rgba(0, 0, 0, 0.657);
+    box-shadow: 0 0 20px 0.5px rgb(0 0 0 / 5%);
+    justify-content: center;
 }
