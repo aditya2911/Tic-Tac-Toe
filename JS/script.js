@@ -1,5 +1,127 @@
-// private object holder
+// module to store private game objects
+const game_private_objects = () => {
+    const WINNING_COMBINATIONS = [
+        [0, 1, 2],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [6, 7, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+        [3, 4, 5]
+    ];
 
+    const X_marker = 'X';
+    const O_marker = 'O';
+
+    return {
+        game_private_objects, X_marker, O_marker
+        , WINNING_COMBINATIONS
+    }
+}
+
+// IIFE function that start instaneously
+const startGame = (() => {
+
+    // get all the cell 
+    const cellsGrp = document.querySelectorAll('.cells');
+    let gamePrivateVaraible = game_private_objects();
+
+    // set the current marker to  'X'
+    let currentTurn = true;
+
+
+    cellsGrp.forEach((cells) => {
+        cells.addEventListener('click', handleClick, { once: true })
+    }
+    )
+
+    // handles the click
+    function handleClick(e) {
+        let cell = e.target;
+        // changes the marker based on the boolen currentTurn variable 
+        let currentMarker = currentTurn ? gamePrivateVaraible.X_marker : gamePrivateVaraible.O_marker;
+
+        // places the marker on the cells
+        placeMarker(cell, currentMarker);
+
+        // changes the marker
+        swapTurns();
+    }
+
+    function placeMarker(selectedCell, marker) {
+        // animation for markup 
+        selectedCell.classList.add('animatedMarkup');
+        selectedCell.textContent = marker;
+
+        showingCurrentPLayer();
+
+        // check if by placing the marker , did any one of the player won
+        if (checkWin(marker)) {
+            // if won end game
+            endGame();
+            console.log('winner is ' + marker);
+        }
+
+        // checks if the game was Draw
+        if (checkDraw()) {
+            console.log('Draw');
+        }
+    }
+
+
+    // changes the marker
+    function swapTurns() {
+        currentTurn = !currentTurn;
+    }
+
+    function showingCurrentPLayer(){
+        if(currentTurn){
+            privy.game_playertwo.classList.remove('currentPlayer')
+            privy.game_playerone.classList.add('currentPlayer')
+        }
+        else{
+            privy.game_playerone.classList.remove('currentPlayer')
+            privy.game_playertwo.classList.add('currentPlayer')
+        }
+    }
+
+    // check if by placing the marker , did any one of the player won
+
+    // array WINNING_COMBINATION IS created which contains all the possible winning Combination
+    // this function check  each cells to see if there textContent is same as the marker
+    // if it is same does it the follow the pattern for winning combination
+    function checkWin(marked) {
+        return gamePrivateVaraible.WINNING_COMBINATIONS.some((element) => {
+            return element.every((index) => {
+                return cellsGrp[index].textContent == marked;
+            })
+
+        })
+    }
+
+    // ends game and remove the click eventListener
+    function endGame() {
+        cellsGrp.forEach(cells => cells.removeEventListener('click', handleClick));
+
+    }
+
+    // check if all the celss contains the X or O markup
+    function checkDraw() {
+        return [...cellsGrp].every((cells) => {
+            if (cells.textContent == gamePrivateVaraible.X_marker) {
+                return true
+            }
+            if (cells.textContent == gamePrivateVaraible.O_marker) return true;
+            else { return false; }
+
+        })
+    }
+
+})()
+
+
+// private object holder
 const private_object = () => {
     let startButton = document.querySelector('.start-button');
     let mainContainer = document.querySelector('.main-container');
@@ -14,8 +136,8 @@ const private_object = () => {
     let game_playertwo = document.querySelector('.player-two');
     let aditya = '123'
     let playerOrBotOptions = document.querySelectorAll('.playerOrBot');
-    let X_gif = document.querySelector('.x-gif');
-    let O_gif = document.querySelector('.o-gif');
+    let X_gif = document.querySelector('#x-gif');
+    let O_gif = document.querySelector('#o-gif');
 
     let x_gif_src = "https://giphy.com/embed/l41lGnxllmN3YqOyI";
     let o_gif_src = "https://giphy.com/embed/xT77XUw1XMVGIxgove"
@@ -39,7 +161,7 @@ const private_object = () => {
     }
 
 };
-let arr;
+
 
 //  created a object that will used by other function to access the html 
 //  elements
@@ -98,22 +220,23 @@ function resetBackgroundColorOfOptions(flag) {
         if ((item.dataset.options == privy.X_BOT) && (flag == 1)) {
             item.style.backgroundColor = '#fff';
             console.log(privy.X_gif)
-            privy.X_gif = privy.o_gif_src;
+
+            privy.X_gif.src = privy.x_gif_src;
         }
 
         if ((item.dataset.options == privy.X_PLAYER) && (flag == 2)) {
             item.style.backgroundColor = '#fff';
-            privy.X_gif = privy.o_gif_src
+            privy.X_gif.src = privy.o_gif_src
         }
 
         if ((item.dataset.options == privy.O_PLAYER) && (flag == 3)) {
             item.style.backgroundColor = '#fff';
-            privy.O_gif = privy.o_gif_src
+            privy.O_gif.src = privy.o_gif_src
         }
 
         if ((item.dataset.options == privy.O_BOT) && (flag == 4)) {
             item.style.backgroundColor = '#fff';
-            privy.O_gif = privy.x_gif_src;
+            privy.O_gif.src = privy.x_gif_src;
         }
     })
 
