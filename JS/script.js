@@ -19,6 +19,53 @@ const game_private_objects = () => {
         , WINNING_COMBINATIONS
     }
 }
+// private object holder
+const private_object = () => {
+    let startButton = document.querySelector('.start-button');
+    let mainContainer = document.querySelector('.main-container');
+    let header = document.querySelector('.header');
+    let splashscreen = document.querySelector('.splash-screen');
+    let cont1 = document.querySelector('.cont1');
+    let cont2 = document.querySelector('.cont2');
+    let vers = document.querySelector('.Vs');
+    let startTimer = document.querySelector('.start-timer')
+    let playContainer = document.querySelector('.play-container');
+    let game_playerone = document.querySelector('.player-one');
+    let game_playertwo = document.querySelector('.player-two');
+    let aditya = '123'
+    let playerOrBotOptions = document.querySelectorAll('.playerOrBot');
+    let X_gif = document.querySelector('#x-gif');
+    let O_gif = document.querySelector('#o-gif');
+
+    let x_gif_src = "https://giphy.com/embed/l41lGnxllmN3YqOyI";
+    let o_gif_src = "https://giphy.com/embed/xT77XUw1XMVGIxgove"
+
+    let X_PLAYER = 'xplayer';
+    let X_BOT = 'xbot';
+    let O_PLAYER = 'oplayer';
+    let O_BOT = 'obot';
+
+    let x;
+    let o;
+
+
+
+    return {
+        startButton, mainContainer, header, splashscreen,
+        playContainer, startTimer, cont1, cont2, vers,
+        playerOrBotOptions, X_BOT, X_PLAYER, O_BOT,
+        O_PLAYER, game_playerone, game_playertwo,
+        X_gif, O_gif, x_gif_src, o_gif_src, x, o
+    }
+
+};
+
+
+//  created a object that will used by other function to access the html 
+//  elements
+const privy = private_object();
+
+
 
 // IIFE function that start instaneously
 const startGame = (() => {
@@ -26,6 +73,7 @@ const startGame = (() => {
     // get all the cell 
     const cellsGrp = document.querySelectorAll('.cells');
     let gamePrivateVaraible = game_private_objects();
+    let humanPlayer = false;
 
     // set the current marker to  'X'
     let currentTurn = true;
@@ -35,6 +83,199 @@ const startGame = (() => {
         cells.addEventListener('click', handleClick, { once: true })
     }
     )
+
+    function checkOwon(arr) {
+
+        let tempArray = Array.from(arr);
+    
+        let winner = false
+        let storedArr = gamePrivateVaraible.WINNING_COMBINATIONS;
+
+        winner = storedArr.some((element) => {
+            return element.every((index) => {
+                return tempArray[index] == 'O';
+            })
+
+        })
+
+     
+        return winner;
+    }
+
+    function checkTieMiniMax(arr) {
+        let tempArray = Array.from(arr);
+        let result = false;
+
+        result = tempArray.every((cell) => {
+            return cell == 'X' || cell == 'O';
+        })
+        return result;
+    }
+
+
+
+    function checkXwon(arr) {
+    
+        let winner = false;
+        let tempArray = Array.from(arr);
+        let storedArr = gamePrivateVaraible.WINNING_COMBINATIONS;
+
+        winner = storedArr.some((element) => {
+            return element.every((index) => {
+                return tempArray[index] == 'X';
+            })
+
+        })
+  
+        return winner;
+    }
+
+    function AI_move() {
+        let bestScore = -1000;
+        let cell_container = privy.cellsGrp;
+        const BOT = 'O';
+        const HUMAN = 'X';
+        let bestMove = -1;
+        let convertedArr = [];
+
+        [...cellsGrp].forEach((cells) => {
+
+            let tempVar = cells.textContent;
+            convertedArr.push(tempVar)
+
+
+            //    let score =  minimax(cellsGrp,cellsGrp.length,false);
+
+            // cells.textContent = '';
+            // if(score>bestScore){
+            //     bestScore = score;
+            //     bestMove = cells;
+            // }
+
+        });
+   
+
+        for (elements = 0; elements < convertedArr.length; elements++) {
+
+            if (convertedArr[elements] == '') {
+
+                convertedArr[elements] = BOT;
+
+             
+
+                let score = minimax(convertedArr, 0, false);
+
+                convertedArr[elements] = "";
+
+                if (score > bestScore) {
+           
+                    bestScore = score;
+                    bestMove = elements;
+                }
+            }
+   
+        }
+
+
+
+   
+        cellsGrp[bestMove].textContent = BOT;
+        cellsGrp[bestMove].classList.add('animatedMarkup');
+        cellsGrp[bestMove].removeEventListener('click',handleClick);
+        humanPlayer = true;
+        swapTurns();
+
+    }
+    let resultWinner;
+    function checkMiniMaxWinner(arr, depth) {
+        let winner = null
+   
+        if (checkOwon(arr)) {
+       
+
+            winner = 10 - depth;
+            // winner = 10;
+        }
+        if (checkXwon(arr)) {
+       
+            winner = depth - 10;
+            //  winner = -10;
+        }
+
+        if (checkTieMiniMax(arr)) {
+            winner = 0;
+        }
+
+   
+        return winner;
+    }
+
+    function minimax(cell_grp, depth, isMaximizing) {
+ 
+        let convertedToArr = Array.from(cell_grp);
+     
+        let checker = checkMiniMaxWinner(convertedToArr, depth)
+        if (checker != null) {
+          
+            return checker;
+
+        }
+
+        if (isMaximizing) {
+
+
+            let bestScore = -1000;
+
+
+            for (let cells = 0; cells < convertedToArr.length; cells++) {
+
+         
+
+                if (convertedToArr[cells] == '') {
+
+               
+
+                    convertedToArr[cells] = 'O';
+
+              
+
+        
+
+                    bestScore = Math.max(bestScore, minimax(convertedToArr, depth + 1, false));
+                    convertedToArr[cells] = '';
+              
+                }
+            }
+
+            return bestScore;
+        }
+
+        else {
+
+            let bestScore = +1000;
+
+        
+
+            for (let cells = 0; cells < convertedToArr.length; cells++) {
+                if (convertedToArr[cells] == '') {
+
+                    convertedToArr[cells] = 'X';
+              
+                    // let score = minimax(convertedToArr, depth + 1, true);
+                   
+
+                    bestScore = Math.min(bestScore, minimax(convertedToArr, depth + 1, true));
+                    convertedToArr[cells] = '';
+                  
+                }
+            }
+
+       
+            return bestScore;
+        }
+
+
+    }
 
     // handles the click
     function handleClick(e) {
@@ -50,23 +291,28 @@ const startGame = (() => {
     }
 
     function placeMarker(selectedCell, marker) {
-        // animation for markup 
+        // animation for markup  
         selectedCell.classList.add('animatedMarkup');
         selectedCell.textContent = marker;
 
         showingCurrentPLayer();
 
+        if (!humanPlayer) {
+            AI_move();
+        }
+
         // check if by placing the marker , did any one of the player won
         if (checkWin(marker)) {
             // if won end game
             endGame();
-            console.log('winner is ' + marker);
+    
         }
 
         // checks if the game was Draw
         if (checkDraw()) {
-            console.log('Draw');
+         
         }
+        humanPlayer = false;
     }
 
 
@@ -75,12 +321,13 @@ const startGame = (() => {
         currentTurn = !currentTurn;
     }
 
-    function showingCurrentPLayer(){
-        if(currentTurn){
+    // illumanites the banner that show the current player
+    function showingCurrentPLayer() {
+        if (!currentTurn) {
             privy.game_playertwo.classList.remove('currentPlayer')
             privy.game_playerone.classList.add('currentPlayer')
         }
-        else{
+        else {
             privy.game_playerone.classList.remove('currentPlayer')
             privy.game_playertwo.classList.add('currentPlayer')
         }
@@ -121,51 +368,6 @@ const startGame = (() => {
 })()
 
 
-// private object holder
-const private_object = () => {
-    let startButton = document.querySelector('.start-button');
-    let mainContainer = document.querySelector('.main-container');
-    let header = document.querySelector('.header');
-    let splashscreen = document.querySelector('.splash-screen');
-    let cont1 = document.querySelector('.cont1');
-    let cont2 = document.querySelector('.cont2');
-    let vers = document.querySelector('.Vs');
-    let startTimer = document.querySelector('.start-timer')
-    let playContainer = document.querySelector('.play-container');
-    let game_playerone = document.querySelector('.player-one');
-    let game_playertwo = document.querySelector('.player-two');
-    let aditya = '123'
-    let playerOrBotOptions = document.querySelectorAll('.playerOrBot');
-    let X_gif = document.querySelector('#x-gif');
-    let O_gif = document.querySelector('#o-gif');
-
-    let x_gif_src = "https://giphy.com/embed/l41lGnxllmN3YqOyI";
-    let o_gif_src = "https://giphy.com/embed/xT77XUw1XMVGIxgove"
-
-    let X_PLAYER = 'xplayer';
-    let X_BOT = 'xbot';
-    let O_PLAYER = 'oplayer';
-    let O_BOT = 'obot';
-
-    let x;
-    let o;
-    console.log(playerOrBotOptions);
-
-
-    return {
-        startButton, mainContainer, header, splashscreen,
-        playContainer, startTimer, cont1, cont2, vers,
-        playerOrBotOptions, X_BOT, X_PLAYER, O_BOT,
-        O_PLAYER, game_playerone, game_playertwo,
-        X_gif, O_gif, x_gif_src, o_gif_src, x, o
-    }
-
-};
-
-
-//  created a object that will used by other function to access the html 
-//  elements
-const privy = private_object();
 
 
 //setting the 2nd layer and 3rd layer to not display as default
@@ -183,7 +385,7 @@ const theCountDown = (count) => {
     window.setTimeout(() => {
         privy.startTimer.classList.add('pop-out');
         if (typeof (count == 'number')) privy.startTimer.classList.add('numberFont');
-        else { privy.startTimer.classList.remove('numberFont'); console.log('removeingFont') }
+        else { privy.startTimer.classList.remove('numberFont'); }
         privy.startTimer.textContent = count
         privy.startTimer.classList.add('popin1');
         privy.startTimer.classList.remove('pop-out');;
@@ -192,7 +394,7 @@ const theCountDown = (count) => {
 
 
 privy.startButton.addEventListener('click', () => {
-    console.log(privy.startButton);
+
     privy.mainContainer.classList.add('fade');
     privy.header.classList.add('fade');
 
@@ -211,7 +413,7 @@ privy.startButton.addEventListener('click', () => {
 })
 
 privy.playerOrBotOptions.forEach(item => {
-    item.addEventListener('click', () => { console.log('clci'); PorBoptionSelected(item) })
+    item.addEventListener('click', () => { PorBoptionSelected(item) })
 })
 
 
@@ -219,7 +421,6 @@ function resetBackgroundColorOfOptions(flag) {
     privy.playerOrBotOptions.forEach(item => {
         if ((item.dataset.options == privy.X_BOT) && (flag == 1)) {
             item.style.backgroundColor = '#fff';
-            console.log(privy.X_gif)
 
             privy.X_gif.src = privy.x_gif_src;
         }
@@ -248,9 +449,7 @@ function choiceViewer(x, o) {
     }
 
 
-    console.log("cjo");
-    console.log({ x });
-    console.log({ o })
+
 
 
 
@@ -268,7 +467,7 @@ function PorBoptionSelected(item1) {
 
 
     let item_classlist = item1.dataset.options;
-    console.log(item1);
+
 
     switch (item_classlist) {
 
@@ -320,19 +519,19 @@ const loadingScreen = (() => {
     privy.splashscreen.classList.add('splash')
     privy.cont1.classList.add('popin1');
 
-    window.setTimeout(() => { privy.vers.classList.add('popin1') }, 1000);
-    window.setTimeout(() => { privy.cont2.classList.add('popin1') }, 2000);
-    window.setTimeout(() => { privy.startTimer.classList.add('popin1') }, 3000);
+    window.setTimeout(() => { privy.vers.classList.add('popin1') }, 10);
+    window.setTimeout(() => { privy.cont2.classList.add('popin1') }, 20);
+    window.setTimeout(() => { privy.startTimer.classList.add('popin1') }, 30);
 
-    window.setTimeout(() => theCountDown(3), 4000);
-    window.setTimeout(() => theCountDown(2), 5000);
-    window.setTimeout(() => theCountDown(1), 6000);
+    window.setTimeout(() => theCountDown(3), 40);
+    window.setTimeout(() => theCountDown(2), 50);
+    window.setTimeout(() => theCountDown(1), 60);
     window.setTimeout(() => theCountDown("Start-Game"), 6500);
 
-    window.setTimeout(() => { privy.splashscreen.classList.add('pop-out') }, 7000);
-    window.setTimeout(() => { privy.splashscreen.style.display = 'none' }, 8000);
-    window.setTimeout(() => { privy.playContainer.style.display = 'flex' }, 8500);
-    window.setTimeout(() => { privy.playContainer.classList.add('popin1') }, 8500);
+    window.setTimeout(() => { privy.splashscreen.classList.add('pop-out') }, 70);
+    window.setTimeout(() => { privy.splashscreen.style.display = 'none' }, 80);
+    window.setTimeout(() => { privy.playContainer.style.display = 'flex' }, 85);
+    window.setTimeout(() => { privy.playContainer.classList.add('popin1') }, 85);
 
 
 
