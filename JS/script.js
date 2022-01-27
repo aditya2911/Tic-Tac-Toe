@@ -177,6 +177,7 @@ const startGame = (() => {
         }
 
 
+        
 
    
         cellsGrp[bestMove].textContent = BOT;
