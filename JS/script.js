@@ -36,6 +36,7 @@ const private_object = () => {
     let playerOrBotOptions = document.querySelectorAll('.playerOrBot');
     let X_gif = document.querySelector('#x-gif');
     let O_gif = document.querySelector('#o-gif');
+    let round_end_container = document.querySelector('.round-end-container');
 
     let x_gif_src = "https://giphy.com/embed/l41lGnxllmN3YqOyI";
     let o_gif_src = "https://giphy.com/embed/xT77XUw1XMVGIxgove"
@@ -55,7 +56,8 @@ const private_object = () => {
         playContainer, startTimer, cont1, cont2, vers,
         playerOrBotOptions, X_BOT, X_PLAYER, O_BOT,
         O_PLAYER, game_playerone, game_playertwo,
-        X_gif, O_gif, x_gif_src, o_gif_src, x, o
+        X_gif, O_gif, x_gif_src, o_gif_src, x, o,
+        round_end_container
     }
 
 };
@@ -68,21 +70,91 @@ const privy = private_object();
 
 
 // IIFE function that start instaneously
-const startGame = (() => {
-
+const startGame = (player1,player2) => {
+    
     // get all the cell 
     const cellsGrp = document.querySelectorAll('.cells');
     let gamePrivateVaraible = game_private_objects();
     let humanPlayer = false;
+    let currentPlayer = true
+   
 
     // set the current marker to  'X'
     let currentTurn = true;
 
+ 
+    console.log(player1,player2);
+    debugger;
+    // let aChecker = checkEmptySpace();
+    // console.log(aChecker);
+    let timerA = 1000;
+    let timerB = 2000;
+    let checkWinmarker = 'X'
+function AI_bots(){
 
-    cellsGrp.forEach((cells) => {
-        cells.addEventListener('click', handleClick, { once: true })
+  if(!checkWin(checkWinmarker)){
+    if(currentPlayer){
+        console.log('you there in BOT?')
+    if(player1 == 'Bot'){
+        currentPlayer = false;
+        if(player2=='Player'){
+        setTimeout(()=>{AI_move('X','O','Xplayer')},500) 
+         checkWinmarker = 'X'
+
+        }
+        else{
+        setTimeout(()=>{AI_move('X','O','Xplayer')},timerA)
+        timerA = timerA +1000;
+        checkWinmarker = 'X'
+        }
+      
     }
-    )
+    else{
+        cellsGrp.forEach((cells) => {
+            cells.addEventListener('click', handleClick, { once: true })
+           
+       })
+       checkWinmarker = 'X'
+    }
+}
+    if(!currentPlayer){
+    if(player2 == 'Bot'){
+        console.log('you there in BOT 222?')
+        currentPlayer = true;
+        if(player1 == 'Player'){
+       setTimeout(()=>{AI_move('O','X','Oplayer');},500) ;
+       checkWinmarker = 'O';
+        }
+        else{
+        setTimeout(()=>{AI_move('O','X','Oplayer');},timerB) ;
+       timerB = timerB+1000
+       checkWinmarker = 'O';
+        }
+        
+    } else{
+        cellsGrp.forEach((cells) => {
+            cells.addEventListener('click', handleClick, { once: true })
+       })
+       checkWinmarker = 'O';
+    //    currentPlayer = !currentPlayer;
+    }
+}
+
+}
+}
+
+AI_bots();
+
+ 
+    function checkEmptySpace(){
+        [...cellsGrp].some((cell)=>{
+            
+               if(cell.textContent == '') return true;
+               else{return false};
+               
+        })
+    }
+
 
     function checkOwon(arr) {
 
@@ -130,40 +202,32 @@ const startGame = (() => {
         return winner;
     }
 
-    function AI_move() {
+    function AI_move(mark1,mark2,XorObot) {
         let bestScore = -1000;
-        let cell_container = privy.cellsGrp;
-        const BOT = 'O';
-        const HUMAN = 'X';
+        let marker1 = mark1;
+        let marker2 = mark2;
         let bestMove = -1;
+        let XorObotVar =  XorObot;
         let convertedArr = [];
 
         [...cellsGrp].forEach((cells) => {
 
             let tempVar = cells.textContent;
             convertedArr.push(tempVar)
-
-
-            //    let score =  minimax(cellsGrp,cellsGrp.length,false);
-
-            // cells.textContent = '';
-            // if(score>bestScore){
-            //     bestScore = score;
-            //     bestMove = cells;
-            // }
+ 
 
         });
    
 
-        for (elements = 0; elements < convertedArr.length; elements++) {
+        for ( let elements = 0; elements < convertedArr.length; elements++) {
 
             if (convertedArr[elements] == '') {
 
-                convertedArr[elements] = BOT;
+                convertedArr[elements] = marker1;
 
              
 
-                let score = minimax(convertedArr, 0, false);
+                let score = minimax(convertedArr, 0, false,marker1,marker2,XorObotVar);
 
                 convertedArr[elements] = "";
 
@@ -177,45 +241,60 @@ const startGame = (() => {
         }
 
 
-        
 
-   
-        cellsGrp[bestMove].textContent = BOT;
-        cellsGrp[bestMove].classList.add('animatedMarkup');
-        cellsGrp[bestMove].removeEventListener('click',handleClick);
+    
+            cellsGrp[bestMove].textContent = marker1;
+            cellsGrp[bestMove].classList.add('animatedMarkup');
+            cellsGrp[bestMove].removeEventListener('click',handleClick);
+    
+     
         humanPlayer = true;
+      AI_bots()
         swapTurns();
 
     }
     let resultWinner;
-    function checkMiniMaxWinner(arr, depth) {
+    function checkMiniMaxWinner(arr, depth,XorO_bot) {
         let winner = null
-   
-        if (checkOwon(arr)) {
-       
-
-            winner = 10 - depth;
-            // winner = 10;
-        }
-        if (checkXwon(arr)) {
-       
-            winner = depth - 10;
-            //  winner = -10;
-        }
 
         if (checkTieMiniMax(arr)) {
             winner = 0;
         }
 
+
+        if (checkXwon(arr)) {
+            if(XorO_bot == 'Xplayer'){
+                winner = 10-depth
+            }
+            else{ 
+                 winner = depth - 10;
+                }
+          
+
+            
+            //  winner = -10;
+        }
    
+        if (checkOwon(arr)) {
+       
+            if(XorO_bot == 'Xplayer'){winner = depth -10}
+            else{
+            winner = 10 - depth;
+            }
+            // winner = 10;
+        }
+      
+
+       
+        
         return winner;
     }
 
-    function minimax(cell_grp, depth, isMaximizing) {
+    function minimax(cell_grp, depth, isMaximizing,mark1,mark2,XorO_bot) {
  
         let convertedToArr = Array.from(cell_grp);
      
-        let checker = checkMiniMaxWinner(convertedToArr, depth)
+        let checker = checkMiniMaxWinner(convertedToArr, depth,XorO_bot)
         if (checker != null) {
           
             return checker;
@@ -236,13 +315,13 @@ const startGame = (() => {
 
                
 
-                    convertedToArr[cells] = 'O';
+                    convertedToArr[cells] = mark1;
 
               
 
         
 
-                    bestScore = Math.max(bestScore, minimax(convertedToArr, depth + 1, false));
+                    bestScore = Math.max(bestScore, minimax(convertedToArr, depth + 1, false,mark1,mark2,XorO_bot));
                     convertedToArr[cells] = '';
               
                 }
@@ -260,12 +339,12 @@ const startGame = (() => {
             for (let cells = 0; cells < convertedToArr.length; cells++) {
                 if (convertedToArr[cells] == '') {
 
-                    convertedToArr[cells] = 'X';
+                    convertedToArr[cells] = mark2;
               
                     // let score = minimax(convertedToArr, depth + 1, true);
                    
 
-                    bestScore = Math.min(bestScore, minimax(convertedToArr, depth + 1, true));
+                    bestScore = Math.min(bestScore, minimax(convertedToArr, depth + 1, true,mark1,mark2,XorO_bot));
                     convertedToArr[cells] = '';
                   
                 }
@@ -281,6 +360,7 @@ const startGame = (() => {
     // handles the click
     function handleClick(e) {
         let cell = e.target;
+
         // changes the marker based on the boolen currentTurn variable 
         let currentMarker = currentTurn ? gamePrivateVaraible.X_marker : gamePrivateVaraible.O_marker;
 
@@ -289,6 +369,9 @@ const startGame = (() => {
 
         // changes the marker
         swapTurns();
+        currentPlayer = !currentPlayer;
+        AI_bots();
+
     }
 
     function placeMarker(selectedCell, marker) {
@@ -299,20 +382,23 @@ const startGame = (() => {
         showingCurrentPLayer();
 
         if (!humanPlayer) {
-            AI_move();
+            //  AI_move('O','X');
         }
+
+         // checks if the game was Draw
+         if (checkDraw()) {
+            console.log('draw');
+           }
 
         // check if by placing the marker , did any one of the player won
         if (checkWin(marker)) {
             // if won end game
+            console.log(marker+'wins')
             endGame();
     
         }
 
-        // checks if the game was Draw
-        if (checkDraw()) {
-         
-        }
+       
         humanPlayer = false;
     }
 
@@ -366,7 +452,7 @@ const startGame = (() => {
         })
     }
 
-})()
+}
 
 
 
@@ -375,6 +461,7 @@ const startGame = (() => {
 privy.splashscreen.style.display = 'none';
 privy.playContainer.style.display = 'none'
 privy.startButton.style.display = 'none';
+privy.round_end_container.style.display = 'none';
 
 
 
@@ -447,6 +534,8 @@ function choiceViewer(x, o) {
     if ((x != undefined) && (o != undefined)) {
         privy.startButton.classList.add('popin1');
         privy.startButton.style.display = 'block';
+     
+     
     }
 
 
@@ -460,6 +549,7 @@ function choiceViewer(x, o) {
 
     privy.game_playerone.textContent = x;
     privy.game_playertwo.textContent = o;
+  
 
 }
 
@@ -531,10 +621,20 @@ const loadingScreen = (() => {
 
     window.setTimeout(() => { privy.splashscreen.classList.add('pop-out') }, 70);
     window.setTimeout(() => { privy.splashscreen.style.display = 'none' }, 80);
-    window.setTimeout(() => { privy.playContainer.style.display = 'flex' }, 85);
+    window.setTimeout(() => { privy.playContainer.style.display = 'flex' ;}, 85);
     window.setTimeout(() => { privy.playContainer.classList.add('popin1') }, 85);
+    window.setTimeout(()=>{startGame(privy.x,privy.o)},95);
+    
 
 
 
 
 })
+
+// const startUp = () =>{
+//     let startGameVar = startGame();
+// }
+
+// if((privy.x != undefined) && (privy.o != undefined)){
+
+// }

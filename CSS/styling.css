@@ -382,3 +382,37 @@ body{
     font-size: 1.4rem;
     font-weight: bolder;
 }
+
+.round-end-container{
+    height: 100vh;
+  
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+.round-end{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 5rem;
+    box-shadow: 0px 0px 10px 2px #7a7a7a26;
+    border-radius: 3rem;
+ 
+}
+
+.replay{
+    font-size: 2rem;
+    outline: none;
+    background-color: rgb(245, 193, 193);
+    border: 0;
+    padding: 1.3rem;
+    border-radius: 2rem;
+}
+
+.winner{
+    font-size: 2rem;
+    text-align: center;
+}
