@@ -77,6 +77,7 @@ const startGame = (player1,player2) => {
     let gamePrivateVaraible = game_private_objects();
     let humanPlayer = false;
     let currentPlayer = true
+    let HighlightPLayerVar = true;
    
 
     // set the current marker to  'X'
@@ -84,28 +85,42 @@ const startGame = (player1,player2) => {
 
  
     console.log(player1,player2);
-    debugger;
+
     // let aChecker = checkEmptySpace();
     // console.log(aChecker);
     let timerA = 1000;
     let timerB = 2000;
-    let checkWinmarker = 'X'
+    let checkWinmarker = 'X';
+    let globalResultValue = 1;
 function AI_bots(){
-
-  if(!checkWin(checkWinmarker)){
+   let res = checkIfWinOrTie();
+  if(res){
     if(currentPlayer){
         console.log('you there in BOT?')
+        
     if(player1 == 'Bot'){
         currentPlayer = false;
+
         if(player2=='Player'){
-        setTimeout(()=>{AI_move('X','O','Xplayer')},500) 
+           
+
+        window.setTimeout(()=>{
+           
+            AI_move('X','O','Xplayer'); showingCurrentPLayer(true);},500) 
          checkWinmarker = 'X'
+        
 
         }
-        else{
-        setTimeout(()=>{AI_move('X','O','Xplayer')},timerA)
+        else if(player2=='Bot'){
+           
+
+        setTimeout(()=>{ 
+            // showingCurrentPLayer(true);
+            AI_move('X','O','Xplayer'); showingCurrentPLayer(true);},timerA)
         timerA = timerA +1000;
         checkWinmarker = 'X'
+        //  showingCurrentPLayer(true);
+
         }
       
     }
@@ -122,11 +137,20 @@ function AI_bots(){
         console.log('you there in BOT 222?')
         currentPlayer = true;
         if(player1 == 'Player'){
-       setTimeout(()=>{AI_move('O','X','Oplayer');},500) ;
+           
+
+       setTimeout(()=>{
+     
+        AI_move('O','X','Oplayer');showingCurrentPLayer(false); },500) ;
+         
        checkWinmarker = 'O';
         }
-        else{
-        setTimeout(()=>{AI_move('O','X','Oplayer');},timerB) ;
+        else if(player1=='Bot'){
+          
+
+        setTimeout(()=>{ 
+        
+            AI_move('O','X','Oplayer');showingCurrentPLayer(false); },timerB) ;
        timerB = timerB+1000
        checkWinmarker = 'O';
         }
@@ -140,24 +164,37 @@ function AI_bots(){
     }
 }
 
-}
+  }
 }
 
 AI_bots();
 
- 
-    function checkEmptySpace(){
-        [...cellsGrp].some((cell)=>{
-            
-               if(cell.textContent == '') return true;
-               else{return false};
-               
-        })
+
+function checkIfWinOrTie(){
+    let cellGrpTextContent =[];
+    cellsGrp.forEach((cells)=>cellGrpTextContent.push(cells.textContent));
+    let result = true;
+    if(checkTieMiniMax(cellGrpTextContent)){
+        console.log('tied??')
+        result = 'Tie'
+    }
+    if(checkOwon(cellGrpTextContent)){
+        result = 'O';
     }
 
+    if(checkXwon(cellGrpTextContent)){
+        result = 'X'
+    }
+
+    if(result!=true){ result= false;}
+    return result;
+}
+
+
+ 
+    
 
     function checkOwon(arr) {
-
         let tempArray = Array.from(arr);
     
         let winner = false
@@ -247,9 +284,12 @@ AI_bots();
             cellsGrp[bestMove].classList.add('animatedMarkup');
             cellsGrp[bestMove].removeEventListener('click',handleClick);
     
-     
-        humanPlayer = true;
+           
+    humanPlayer = true;
+    let result = checkIfWinOrTie();
+    if(result){
       AI_bots()
+    }
         swapTurns();
 
     }
@@ -379,7 +419,11 @@ AI_bots();
         selectedCell.classList.add('animatedMarkup');
         selectedCell.textContent = marker;
 
-        showingCurrentPLayer();
+
+        if(player1 == 'Bot'|| player2 == 'Bot'){ showingCurrentPLayer(!HighlightPLayerVar); }
+
+         HighlightPLayerVar = !HighlightPLayerVar
+        showingCurrentPLayer(HighlightPLayerVar);
 
         if (!humanPlayer) {
             //  AI_move('O','X');
@@ -409,8 +453,8 @@ AI_bots();
     }
 
     // illumanites the banner that show the current player
-    function showingCurrentPLayer() {
-        if (!currentTurn) {
+    function showingCurrentPLayer(currentPlayer) {
+        if (!currentPlayer) {
             privy.game_playertwo.classList.remove('currentPlayer')
             privy.game_playerone.classList.add('currentPlayer')
         }
