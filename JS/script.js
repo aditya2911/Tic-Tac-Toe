@@ -79,6 +79,7 @@ const startGame = (player1,player2) => {
     let currentPlayer = true
     let HighlightPLayerVar = true;
    
+    showingCurrentPLayer(false);
 
     // set the current marker to  'X'
     let currentTurn = true;
@@ -186,7 +187,7 @@ function checkIfWinOrTie(){
         result = 'X'
     }
 
-    if(result!=true){ result= false;}
+    if(result!=true){ result= false;endGame()}
     return result;
 }
 
@@ -279,10 +280,10 @@ function checkIfWinOrTie(){
 
 
 
-    
+        cellsGrp[bestMove].removeEventListener('click',handleClick);
             cellsGrp[bestMove].textContent = marker1;
             cellsGrp[bestMove].classList.add('animatedMarkup');
-            cellsGrp[bestMove].removeEventListener('click',handleClick);
+            
     
            
     humanPlayer = true;
@@ -410,6 +411,7 @@ function checkIfWinOrTie(){
         // changes the marker
         swapTurns();
         currentPlayer = !currentPlayer;
+        showingCurrentPLayer(!currentPlayer);
         AI_bots();
 
     }
