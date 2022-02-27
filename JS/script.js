@@ -32,11 +32,17 @@ const private_object = () => {
     let playContainer = document.querySelector('.play-container');
     let game_playerone = document.querySelector('.player-one');
     let game_playertwo = document.querySelector('.player-two');
+
+    let game_player_parent1 = document.querySelector('.player-parent1');
+    let game_player_parent2 = document.querySelector('.player-parent2');
     let aditya = '123'
     let playerOrBotOptions = document.querySelectorAll('.playerOrBot');
     let X_gif = document.querySelector('#x-gif');
     let O_gif = document.querySelector('#o-gif');
     let round_end_container = document.querySelector('.round-end-container');
+
+    let X_score = document.getElementById('X_score');
+    let O_score = document.getElementById('O_score');
 
     let x_gif_src = "https://giphy.com/embed/l41lGnxllmN3YqOyI";
     let o_gif_src = "https://giphy.com/embed/xT77XUw1XMVGIxgove"
@@ -57,7 +63,8 @@ const private_object = () => {
         playerOrBotOptions, X_BOT, X_PLAYER, O_BOT,
         O_PLAYER, game_playerone, game_playertwo,
         X_gif, O_gif, x_gif_src, o_gif_src, x, o,
-        round_end_container
+        round_end_container,game_player_parent1,game_player_parent2
+        ,X_score,O_score
     }
 
 };
@@ -78,6 +85,8 @@ const startGame = (player1,player2) => {
     let humanPlayer = false;
     let currentPlayer = true
     let HighlightPLayerVar = true;
+     let scoreOfX = 0;
+     let scoreOfO = 0;
    
     showingCurrentPLayer(false);
 
@@ -93,6 +102,7 @@ const startGame = (player1,player2) => {
     let timerB = 2000;
     let checkWinmarker = 'X';
     let globalResultValue = 1;
+    let index ;
 function AI_bots(){
    let res = checkIfWinOrTie();
   if(res){
@@ -170,6 +180,13 @@ function AI_bots(){
 
 AI_bots();
 
+function Cell_Stalemate(){
+    [...cellsGrp].forEach((cell)=>{
+        console.log(cell);
+        cell.classList.remove('.animatedMarkup')
+        cell.classList.add('stalemate');
+    })
+}
 
 function checkIfWinOrTie(){
     let cellGrpTextContent =[];
@@ -177,14 +194,20 @@ function checkIfWinOrTie(){
     let result = true;
     if(checkTieMiniMax(cellGrpTextContent)){
         console.log('tied??')
+        Cell_Stalemate();
         result = 'Tie'
     }
     if(checkOwon(cellGrpTextContent)){
         result = 'O';
+        HighlightWinningCells(index)
+        privy.O_score.textContent = scoreOfO+1;
     }
 
     if(checkXwon(cellGrpTextContent)){
+        privy.X_score.textContent = scoreOfX+1;
+        HighlightWinningCells(index)
         result = 'X'
+
     }
 
     if(result!=true){ result= false;endGame()}
@@ -193,7 +216,11 @@ function checkIfWinOrTie(){
 
 
  
-    
+    function HighlightWinningCells(arr){
+            arr.map((item)=>{
+                cellsGrp[item].classList.add('highlightWinMark');
+            })
+    }
 
     function checkOwon(arr) {
         let tempArray = Array.from(arr);
@@ -202,9 +229,16 @@ function checkIfWinOrTie(){
         let storedArr = gamePrivateVaraible.WINNING_COMBINATIONS;
 
         winner = storedArr.some((element) => {
-            return element.every((index) => {
-                return tempArray[index] == 'O';
-            })
+            let result = element.every((index) => {
+                return tempArray[index] == 'O'; 
+                
+            }
+            )
+            if(result == true) {index = element;
+                // console.log(index);
+          };
+            
+            return result;
 
         })
 
@@ -231,9 +265,17 @@ function checkIfWinOrTie(){
         let storedArr = gamePrivateVaraible.WINNING_COMBINATIONS;
 
         winner = storedArr.some((element) => {
-            return element.every((index) => {
+            let result = element.every((index) => {
                 return tempArray[index] == 'X';
             })
+            if(result == true) {
+                index = element;
+                // console.log(index);
+                
+            // HighlightWinningCells(index)};
+            }
+            return result;
+            
 
         })
   
@@ -457,12 +499,12 @@ function checkIfWinOrTie(){
     // illumanites the banner that show the current player
     function showingCurrentPLayer(currentPlayer) {
         if (!currentPlayer) {
-            privy.game_playertwo.classList.remove('currentPlayer')
-            privy.game_playerone.classList.add('currentPlayer')
+            privy.game_player_parent2.classList.remove('currentPlayer')
+            privy.game_player_parent1.classList.add('currentPlayer')
         }
         else {
-            privy.game_playerone.classList.remove('currentPlayer')
-            privy.game_playertwo.classList.add('currentPlayer')
+            privy.game_player_parent1.classList.remove('currentPlayer')
+            privy.game_player_parent2.classList.add('currentPlayer')
         }
     }
 

@@ -141,6 +141,9 @@ body{
    
 }
 
+
+
+
 .gif{
     display: flex;
     flex: 1;
@@ -320,11 +323,12 @@ body{
     grid-template-columns: repeat(3,1fr);
 }
 
-.player-one ,.player-two{
+.player-parent1 ,.player-parent2 {
     width: 15rem;
     align-items: center;
     display: flex;
     transition-property: all;
+    
     transition-duration: 200ms;
     gap: 0.7rem;
     justify-content: center;
@@ -415,4 +419,48 @@ body{
 .winner{
     font-size: 2rem;
     text-align: center;
+}
+
+.stalemate {
+    animation-fill-mode: forwards;
+    animation-duration: 2s;
+    animation-name: stalemate;
+}
+
+@keyframes stalemate {
+    from{
+        background-color: #f5f5f5;
+        font-size: 3rem;
+    }
+    80% {
+    
+        background-color: rgba(250, 243, 144, 0.452);
+        box-shadow: 0px 0px 20px 1px #c2c2c257;
+        font-size: 3.5rem;
+    }
+    100% {
+        font-size: 3rem;
+    }
+}
+
+.highlightWinMark {
+    animation-fill-mode: forwards;
+    animation-duration: 2s;
+    animation-name: highlightWinMark;
+}
+
+@keyframes highlightWinMark {
+    from{
+        background-color: #f5f5f5;
+        font-size: 3rem;
+    }
+    80% {
+    
+        background-color: rgb(128, 177, 128);
+        box-shadow: 0px 0px 20px 2px #c2c2c2;
+        font-size: 3.5rem;
+    }
+    100% {
+        font-size: 3rem;
+    }
 }
