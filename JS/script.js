@@ -57,6 +57,7 @@ const private_object = () => {
 
 
 
+
     return {
         startButton, mainContainer, header, splashscreen,
         playContainer, startTimer, cont1, cont2, vers,
@@ -68,7 +69,17 @@ const private_object = () => {
     }
 
 };
+function endGameReload(){
+    window.location = "index.html";
+}
+let returnButton = document.querySelector(".return-button");
+let endGameButton  = document.querySelector(".replay");
+let winnerTextContainer  = document.querySelector(".winner");
 
+
+returnButton.addEventListener('click', endGameReload, { once: true })
+
+endGameButton.addEventListener("click",()=>{endGameReload()});
 
 //  created a object that will used by other function to access the html 
 //  elements
@@ -78,15 +89,21 @@ const privy = private_object();
 
 // IIFE function that start instaneously
 const startGame = (player1,player2) => {
+
+    
     
     // get all the cell 
     const cellsGrp = document.querySelectorAll('.cells');
     let gamePrivateVaraible = game_private_objects();
+
     let humanPlayer = false;
     let currentPlayer = true
     let HighlightPLayerVar = true;
      let scoreOfX = 0;
      let scoreOfO = 0;
+     let winnerText ;
+     let bestMoveHolder ;
+     let isBestMoveEmpty = false;
    
     showingCurrentPLayer(false);
 
@@ -118,6 +135,7 @@ function AI_bots(){
         window.setTimeout(()=>{
            
             AI_move('X','O','Xplayer'); showingCurrentPLayer(true);},500) 
+        
          checkWinmarker = 'X'
         
 
@@ -137,8 +155,14 @@ function AI_bots(){
     }
     else{
         cellsGrp.forEach((cells) => {
+
+            if(cells.textContent ==""){
             cells.addEventListener('click', handleClick, { once: true })
-           
+            }
+            else{
+                cells.removeEventListener('click', handleClick);
+            }
+       
        })
        checkWinmarker = 'X'
     }
@@ -168,8 +192,14 @@ function AI_bots(){
         
     } else{
         cellsGrp.forEach((cells) => {
-            cells.addEventListener('click', handleClick, { once: true })
+            if(cells.textContent ==""){
+                cells.addEventListener('click', handleClick, { once: true })
+                }
+             else{
+                    cells.removeEventListener('click', handleClick);
+                }
        })
+
        checkWinmarker = 'O';
     //    currentPlayer = !currentPlayer;
     }
@@ -182,10 +212,26 @@ AI_bots();
 
 function Cell_Stalemate(){
     [...cellsGrp].forEach((cell)=>{
-        console.log(cell);
-        cell.classList.remove('.animatedMarkup')
+        // console.log(cell);
+        // cell.classList.remove('.animatedMarkup')
         cell.classList.add('stalemate');
     })
+}
+
+function ResetGame(){
+[...cellsGrp].forEach(cell => {
+    cell.classList.add('fadeMarkersOut');
+    cell.classList.remove('stalemate');
+    cell.classList.remove('.animatedMarkup')
+    cell.classList.remove('highlightWinMark');
+    cell.style='';
+
+    window.setTimeout(()=>{
+        cell.classList.remove('fadeMarkersOut');
+        cell.textContent= '';
+    })
+});
+
 }
 
 function checkIfWinOrTie(){
@@ -195,22 +241,30 @@ function checkIfWinOrTie(){
     if(checkTieMiniMax(cellGrpTextContent)){
         console.log('tied??')
         Cell_Stalemate();
+        // ResetGame();
+        winnerText = "Tie"
         result = 'Tie'
     }
     if(checkOwon(cellGrpTextContent)){
         result = 'O';
         HighlightWinningCells(index)
+        // ResetGame();
+        winnerText = "O won";
         privy.O_score.textContent = scoreOfO+1;
     }
 
     if(checkXwon(cellGrpTextContent)){
         privy.X_score.textContent = scoreOfX+1;
         HighlightWinningCells(index)
+        // ResetGame();
         result = 'X'
+        winnerText = "X won";
 
     }
 
-    if(result!=true){ result= false;endGame()}
+    if(result!=true){ 
+        result= false;
+        endGame()}
     return result;
 }
 
@@ -322,9 +376,11 @@ function checkIfWinOrTie(){
 
 
 
-        cellsGrp[bestMove].removeEventListener('click',handleClick);
-            cellsGrp[bestMove].textContent = marker1;
-            cellsGrp[bestMove].classList.add('animatedMarkup');
+        bestMoveHolder =  bestMove;
+        isBestMoveEmpty = true;
+        cellsGrp[bestMove].removeEventListener('click',()=>{handleClick});
+        cellsGrp[bestMove].textContent = marker1;
+        cellsGrp[bestMove].classList.add('animatedMarkup');
             
     
            
@@ -525,8 +581,17 @@ function checkIfWinOrTie(){
     // ends game and remove the click eventListener
     function endGame() {
         cellsGrp.forEach(cells => cells.removeEventListener('click', handleClick));
+        winnerTextContainer.textContent = winnerText;
+        window.setTimeout(()=>{
+            privy.playContainer.style.display = 'none'
+            privy.round_end_container.style.display = 'flex';
+
+        },2000)
 
     }
+
+
+
 
     // check if all the celss contains the X or O markup
     function checkDraw() {
