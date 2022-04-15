@@ -583,8 +583,9 @@ function checkIfWinOrTie(){
         cellsGrp.forEach(cells => cells.removeEventListener('click', handleClick));
         winnerTextContainer.textContent = winnerText;
         window.setTimeout(()=>{
-            privy.playContainer.style.display = 'none'
+            // privy.playContainer.style.display = 'none'
             privy.round_end_container.style.display = 'flex';
+            privy.round_end_container.classList.add('popin1');
 
         },2000)
 
@@ -763,20 +764,20 @@ const loadingScreen = (() => {
     privy.splashscreen.classList.add('splash')
     privy.cont1.classList.add('popin1');
 
-    window.setTimeout(() => { privy.vers.classList.add('popin1') }, 10);
-    window.setTimeout(() => { privy.cont2.classList.add('popin1') }, 20);
-    window.setTimeout(() => { privy.startTimer.classList.add('popin1') }, 30);
+    window.setTimeout(() => { privy.vers.classList.add('popin1') }, 1000);
+    window.setTimeout(() => { privy.cont2.classList.add('popin1') }, 2000);
+    window.setTimeout(() => { privy.startTimer.classList.add('popin1') }, 3000);
 
-    window.setTimeout(() => theCountDown(3), 40);
-    window.setTimeout(() => theCountDown(2), 50);
-    window.setTimeout(() => theCountDown(1), 60);
+    window.setTimeout(() => theCountDown(3), 4000);
+    window.setTimeout(() => theCountDown(2), 5000);
+    window.setTimeout(() => theCountDown(1), 6000);
     window.setTimeout(() => theCountDown("Start-Game"), 6500);
 
-    window.setTimeout(() => { privy.splashscreen.classList.add('pop-out') }, 70);
-    window.setTimeout(() => { privy.splashscreen.style.display = 'none' }, 80);
-    window.setTimeout(() => { privy.playContainer.style.display = 'flex' ;}, 85);
-    window.setTimeout(() => { privy.playContainer.classList.add('popin1') }, 85);
-    window.setTimeout(()=>{startGame(privy.x,privy.o)},95);
+    window.setTimeout(() => { privy.splashscreen.classList.add('pop-out') }, 7000);
+    window.setTimeout(() => { privy.splashscreen.style.display = 'none' }, 8000);
+    window.setTimeout(() => { privy.playContainer.style.display = 'flex' ;}, 8500);
+    window.setTimeout(() => { privy.playContainer.classList.add('popin1') }, 8500);
+    window.setTimeout(()=>{startGame(privy.x,privy.o)},9500);
     
 
 
