@@ -1,3 +1,5 @@
+// This code is written by Aditya Salunke
+
 // module to store private game objects
 const game_private_objects = () => {
     const WINNING_COMBINATIONS = [
@@ -35,7 +37,6 @@ const private_object = () => {
 
     let game_player_parent1 = document.querySelector('.player-parent1');
     let game_player_parent2 = document.querySelector('.player-parent2');
-    let aditya = '123'
     let playerOrBotOptions = document.querySelectorAll('.playerOrBot');
     let X_gif = document.querySelector('#x-gif');
     let O_gif = document.querySelector('#o-gif');
@@ -69,9 +70,16 @@ const private_object = () => {
     }
 
 };
+
+
+
+
+
+// function to reload the game
 function endGameReload(){
     window.location = "index.html";
 }
+
 let returnButton = document.querySelector(".return-button");
 let endGameButton  = document.querySelector(".replay");
 let winnerTextContainer  = document.querySelector(".winner");
@@ -96,14 +104,12 @@ const startGame = (player1,player2) => {
     const cellsGrp = document.querySelectorAll('.cells');
     let gamePrivateVaraible = game_private_objects();
 
-    let humanPlayer = false;
     let currentPlayer = true
     let HighlightPLayerVar = true;
      let scoreOfX = 0;
      let scoreOfO = 0;
      let winnerText ;
-     let bestMoveHolder ;
-     let isBestMoveEmpty = false;
+    
    
     showingCurrentPLayer(false);
 
@@ -111,20 +117,21 @@ const startGame = (player1,player2) => {
     let currentTurn = true;
 
  
-    console.log(player1,player2);
 
-    // let aChecker = checkEmptySpace();
-    // console.log(aChecker);
+
+
     let timerA = 1000;
     let timerB = 2000;
     let checkWinmarker = 'X';
-    let globalResultValue = 1;
     let index ;
+
+    // function for checking if the player A and player B are bot or players
 function AI_bots(){
    let res = checkIfWinOrTie();
   if(res){
+
     if(currentPlayer){
-        console.log('you there in BOT?')
+   
         
     if(player1 == 'Bot'){
         currentPlayer = false;
@@ -134,7 +141,8 @@ function AI_bots(){
 
         window.setTimeout(()=>{
            
-            AI_move('X','O','Xplayer'); showingCurrentPLayer(true);},500) 
+            AI_move('X','O','Xplayer'); 
+            showingCurrentPLayer(true);},500) 
         
          checkWinmarker = 'X'
         
@@ -142,13 +150,13 @@ function AI_bots(){
         }
         else if(player2=='Bot'){
            
-
         setTimeout(()=>{ 
-            // showingCurrentPLayer(true);
-            AI_move('X','O','Xplayer'); showingCurrentPLayer(true);},timerA)
+          
+            AI_move('X','O','Xplayer'); 
+            showingCurrentPLayer(true);},timerA)
         timerA = timerA +1000;
         checkWinmarker = 'X'
-        //  showingCurrentPLayer(true);
+      
 
         }
       
@@ -169,7 +177,7 @@ function AI_bots(){
 }
     if(!currentPlayer){
     if(player2 == 'Bot'){
-        console.log('you there in BOT 222?')
+  
         currentPlayer = true;
         if(player1 == 'Player'){
            
@@ -210,45 +218,31 @@ function AI_bots(){
 
 AI_bots();
 
+// check if tied then add a class to color background of cells
 function Cell_Stalemate(){
     [...cellsGrp].forEach((cell)=>{
-        // console.log(cell);
-        // cell.classList.remove('.animatedMarkup')
+
         cell.classList.add('stalemate');
     })
 }
 
-function ResetGame(){
-[...cellsGrp].forEach(cell => {
-    cell.classList.add('fadeMarkersOut');
-    cell.classList.remove('stalemate');
-    cell.classList.remove('.animatedMarkup')
-    cell.classList.remove('highlightWinMark');
-    cell.style='';
 
-    window.setTimeout(()=>{
-        cell.classList.remove('fadeMarkersOut');
-        cell.textContent= '';
-    })
-});
-
-}
-
+// function to check if a player wins ,loses or stalemate
 function checkIfWinOrTie(){
     let cellGrpTextContent =[];
     cellsGrp.forEach((cells)=>cellGrpTextContent.push(cells.textContent));
     let result = true;
     if(checkTieMiniMax(cellGrpTextContent)){
-        console.log('tied??')
+  
         Cell_Stalemate();
-        // ResetGame();
+  
         winnerText = "Tie"
         result = 'Tie'
     }
     if(checkOwon(cellGrpTextContent)){
         result = 'O';
         HighlightWinningCells(index)
-        // ResetGame();
+  
         winnerText = "O won";
         privy.O_score.textContent = scoreOfO+1;
     }
@@ -256,7 +250,7 @@ function checkIfWinOrTie(){
     if(checkXwon(cellGrpTextContent)){
         privy.X_score.textContent = scoreOfX+1;
         HighlightWinningCells(index)
-        // ResetGame();
+
         result = 'X'
         winnerText = "X won";
 
@@ -269,13 +263,14 @@ function checkIfWinOrTie(){
 }
 
 
- 
+ // highlights the winning combination of cells
     function HighlightWinningCells(arr){
             arr.map((item)=>{
                 cellsGrp[item].classList.add('highlightWinMark');
             })
     }
 
+// checks if O won
     function checkOwon(arr) {
         let tempArray = Array.from(arr);
     
@@ -289,7 +284,7 @@ function checkIfWinOrTie(){
             }
             )
             if(result == true) {index = element;
-                // console.log(index);
+   
           };
             
             return result;
@@ -300,6 +295,7 @@ function checkIfWinOrTie(){
         return winner;
     }
 
+  // checks for tie  
     function checkTieMiniMax(arr) {
         let tempArray = Array.from(arr);
         let result = false;
@@ -311,7 +307,7 @@ function checkIfWinOrTie(){
     }
 
 
-
+// checks if X won
     function checkXwon(arr) {
     
         let winner = false;
@@ -324,9 +320,7 @@ function checkIfWinOrTie(){
             })
             if(result == true) {
                 index = element;
-                // console.log(index);
-                
-            // HighlightWinningCells(index)};
+ 
             }
             return result;
             
@@ -336,6 +330,7 @@ function checkIfWinOrTie(){
         return winner;
     }
 
+    // implementaion of minmax algorithm
     function AI_move(mark1,mark2,XorObot) {
         let bestScore = -1000;
         let marker1 = mark1;
@@ -376,7 +371,6 @@ function checkIfWinOrTie(){
 
 
 
-        bestMoveHolder =  bestMove;
         isBestMoveEmpty = true;
         cellsGrp[bestMove].removeEventListener('click',()=>{handleClick});
         cellsGrp[bestMove].textContent = marker1;
@@ -384,7 +378,6 @@ function checkIfWinOrTie(){
             
     
            
-    humanPlayer = true;
     let result = checkIfWinOrTie();
     if(result){
       AI_bots()
@@ -392,7 +385,8 @@ function checkIfWinOrTie(){
         swapTurns();
 
     }
-    let resultWinner;
+
+    // checks for the winner of minmax
     function checkMiniMaxWinner(arr, depth,XorO_bot) {
         let winner = null
 
@@ -442,23 +436,15 @@ function checkIfWinOrTie(){
 
         if (isMaximizing) {
 
-
             let bestScore = -1000;
 
-
             for (let cells = 0; cells < convertedToArr.length; cells++) {
-
-         
 
                 if (convertedToArr[cells] == '') {
 
                
 
                     convertedToArr[cells] = mark1;
-
-              
-
-        
 
                     bestScore = Math.max(bestScore, minimax(convertedToArr, depth + 1, false,mark1,mark2,XorO_bot));
                     convertedToArr[cells] = '';
@@ -479,9 +465,6 @@ function checkIfWinOrTie(){
                 if (convertedToArr[cells] == '') {
 
                     convertedToArr[cells] = mark2;
-              
-                    // let score = minimax(convertedToArr, depth + 1, true);
-                   
 
                     bestScore = Math.min(bestScore, minimax(convertedToArr, depth + 1, true,mark1,mark2,XorO_bot));
                     convertedToArr[cells] = '';
@@ -525,10 +508,7 @@ function checkIfWinOrTie(){
          HighlightPLayerVar = !HighlightPLayerVar
         showingCurrentPLayer(HighlightPLayerVar);
 
-        if (!humanPlayer) {
-            //  AI_move('O','X');
-        }
-
+   
          // checks if the game was Draw
          if (checkDraw()) {
             console.log('draw');
@@ -543,7 +523,6 @@ function checkIfWinOrTie(){
         }
 
        
-        humanPlayer = false;
     }
 
 
@@ -594,7 +573,7 @@ function checkIfWinOrTie(){
 
 
 
-    // check if all the celss contains the X or O markup
+    // check if all the cells contains the X or O markup
     function checkDraw() {
         return [...cellsGrp].every((cells) => {
             if (cells.textContent == gamePrivateVaraible.X_marker) {
@@ -658,7 +637,7 @@ privy.playerOrBotOptions.forEach(item => {
     item.addEventListener('click', () => { PorBoptionSelected(item) })
 })
 
-
+// resets all the  options color 
 function resetBackgroundColorOfOptions(flag) {
     privy.playerOrBotOptions.forEach(item => {
         if ((item.dataset.options == privy.X_BOT) && (flag == 1)) {
@@ -684,6 +663,8 @@ function resetBackgroundColorOfOptions(flag) {
     })
 
 }
+
+// set the splash screen text content
 function choiceViewer(x, o) {
     if ((x != undefined) && (o != undefined)) {
         privy.startButton.classList.add('popin1');
@@ -691,12 +672,6 @@ function choiceViewer(x, o) {
      
      
     }
-
-
-
-
-
-
 
     privy.cont1.textContent = x;
     privy.cont2.textContent = o;
@@ -707,9 +682,8 @@ function choiceViewer(x, o) {
 
 }
 
-
+// highlights the selected option colors
 function PorBoptionSelected(item1) {
-
 
     let item_classlist = item1.dataset.options;
 
@@ -717,7 +691,7 @@ function PorBoptionSelected(item1) {
     switch (item_classlist) {
 
         case privy.X_PLAYER:
-            // resetBackgroundColorOfOptions();
+  
             item1.style.backgroundColor = '#f5c1c1'
             resetBackgroundColorOfOptions(1);
             privy.x = 'Player';
@@ -755,10 +729,8 @@ function PorBoptionSelected(item1) {
 
 }
 
-
+// loading screen
 const loadingScreen = (() => {
-
-
 
     privy.splashscreen.style.display = 'flex';
     privy.splashscreen.classList.add('splash')
@@ -785,10 +757,3 @@ const loadingScreen = (() => {
 
 })
 
-// const startUp = () =>{
-//     let startGameVar = startGame();
-// }
-
-// if((privy.x != undefined) && (privy.o != undefined)){
-
-// }
